@@ -406,7 +406,7 @@ const AlberoCittadinanza = () => {
             <br />
             <span className="text-base">- Nelson Mandela</span>
           </p>
-          <p className="mt-4 text-gray-700 font-semibold">Classe 4CIT - Trimestre 2025/2026</p>
+          <p className="mt-4 text-gray-700 font-semibold">Classe 4CIT - Trimestre 2025/2026 By Ruscitto M. & Pernarella M.</p>
         </div>
 
         <div className="bg-gradient-to-b from-sky-50 to-green-50 rounded-2xl shadow-2xl p-4 md:p-8">
