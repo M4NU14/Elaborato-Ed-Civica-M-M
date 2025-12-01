@@ -1,0 +1,492 @@
+import React, { useState } from 'react';
+import { X } from 'lucide-react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+
+const AlberoCittadinanza = () => {
+  const [selectedFruit, setSelectedFruit] = useState(null);
+  const [interactiveValue, setInteractiveValue] = useState(1.5);
+  const [bacteriaTime, setBacteriaTime] = useState(0);
+  const [decayYears, setDecayYears] = useState(0);
+
+  const generateExponentialData = (base) => {
+    const data = [];
+    for (let x = 0; x <= 10; x++) {
+      data.push({
+        x: x,
+        y: Math.pow(base, x)
+      });
+    }
+    return data;
+  };
+
+  const generateBacteriaData = (time) => {
+    const data = [];
+    const K = 1000;
+    const r = 0.5;  
+    for (let t = 0; t <= 20; t++) {
+      const N = K / (1 + Math.exp(-r * (t - 10)));
+      data.push({
+        ore: t,
+        batteri: Math.round(N),
+        highlight: t === Math.round(time)
+      });
+    }
+    return data;
+  };
+
+  const generateDecayData = (years) => {
+    const data = [];
+    const halfLife = 5730;
+    for (let t = 0; t <= 30000; t += 2000) {
+      const amount = 100 * Math.pow(0.5, t / halfLife);
+      data.push({
+        anni: t,
+        percentuale: amount.toFixed(2),
+        highlight: Math.abs(t - years) < 2000
+      });
+    }
+    return data;
+  };
+
+  const fruitsData = {
+    'frutto1-1': {
+      title: 'Agenda 2030: Un Patto Globale per il Futuro',
+      content: 'Nel settembre 2015, 193 Paesi membri dell\'ONU hanno sottoscritto l\'Agenda 2030 per lo Sviluppo Sostenibile, un programma ambizioso che rappresenta un vero e proprio patto tra le nazioni per affrontare le sfide più urgenti del nostro tempo. Non è solo un documento politico: è una visione di futuro in cui dignità umana, prosperità economica e protezione del pianeta camminano insieme. L\'Agenda riconosce che povertà, disuguaglianza, crisi climatica e ingiustizia sono interconnesse, e che solo attraverso un approccio integrato possiamo costruire un mondo sostenibile. È il più grande impegno collettivo della storia moderna per garantire che nessuno sia lasciato indietro.',
+      emoji: '🌐',
+      color: '#4CAF50',
+      type: 'text'
+    },
+    'frutto1-2': {
+      title: 'I 17 Obiettivi: Una Mappa per Trasformare il Mondo',
+      content: 'I 17 Obiettivi di Sviluppo Sostenibile (SDGs) sono una bussola universale che guida l\'umanità verso un futuro migliore. Dall\'eliminazione della povertà estrema (Goal 1) alla lotta contro il cambiamento climatico (Goal 13), dalla parità di genere (Goal 5) alla pace e giustizia (Goal 16), ogni obiettivo rappresenta una sfida cruciale per la sopravvivenza e il benessere del pianeta. Questi obiettivi non sono isolati: il raggiungimento di uno sostiene e amplifica gli altri. Per esempio, l\'educazione di qualità (Goal 4) è fondamentale per raggiungere tutti gli altri obiettivi. L\'Agenda 2030 ci ricorda che lo sviluppo sostenibile deve bilanciare tre dimensioni: economica, sociale e ambientale.',
+      emoji: '🎯',
+      color: '#4CAF50',
+      type: 'text'
+    },
+    'frutto1-3': {
+      title: 'Cittadinanza Attiva: Dal Globale al Locale',
+      content: 'L\'Agenda 2030 non è solo responsabilità dei governi: ciascuno di noi ha un ruolo fondamentale. Come giovani cittadini, possiamo essere agenti di cambiamento attraverso scelte quotidiane consapevoli: ridurre gli sprechi alimentari (Goal 12), promuovere l\'uguaglianza a scuola e nella comunità (Goal 10), partecipare attivamente alla vita democratica (Goal 16). Ogni volta che scegliamo prodotti sostenibili, risparmiamo energia, rispettiamo la diversità o ci informiamo criticamente, contribuiamo a realizzare gli SDGs. La cittadinanza attiva significa trasformare la consapevolezza in azione, portare il cambiamento globale nella nostra realtà locale. Perché il futuro sostenibile non si costruisce solo nei palazzi del potere, ma nelle nostre case, nelle nostre scuole, nelle nostre comunità.',
+      emoji: '💚',
+      color: '#4CAF50',
+      type: 'text'
+    },
+    'frutto2-1': {
+      title: 'Crescita Esponenziale: Il Linguaggio della Natura',
+      content: 'La funzione esponenziale y = aˣ modella fenomeni che crescono in modo rapido e accelerato. Sperimenta cambiando la base per vedere come varia la crescita!',
+      emoji: '📈',
+      color: '#2196F3',
+      type: 'exponential'
+    },
+    'frutto2-2': {
+      title: 'Batteri e Fermentazione: Matematica della Vita',
+      content: 'Durante la fermentazione, i batteri crescono seguendo una curva logistica. Muovi il cursore per vedere l\'evoluzione della colonia nel tempo!',
+      emoji: '🦠',
+      color: '#2196F3',
+      type: 'bacteria'
+    },
+    'frutto2-3': {
+      title: 'Decadimento Esponenziale: Il Carbonio-14',
+      content: 'Il Carbonio-14 decade con emivita (tempo di dimezzamento) di 5.730 anni. Esplora come gli archeologi datano i reperti antichi!',
+      emoji: '📉',
+      color: '#2196F3',
+      type: 'decay'
+    },
+    // RAMO 3: INGLESE - Cittadinanza Attiva
+    'frutto3-1': {
+      title: 'Goal 16: Building Peace and Justice',
+      content: 'Goal 16 is one of the 17 Sustainable Development Goals created by the United Nations to achieve by 2030. As you wrote in class, "it is one of the most important goals because without peace, it is hard to achieve the others." This goal promotes peaceful societies, access to justice for all, and effective institutions. It addresses critical issues like reducing violence, ending exploitation and trafficking (especially against children), and ensuring that everyone can live safely in their communities.',
+      emoji: '⚖️',
+      color: '#FF9800'
+    },
+    'frutto3-2': {
+      title: 'The Rule of Law: Justice for Everyone',
+      content: 'A fundamental principle of Goal 16 is the rule of law, which means "everyone, including the government, must follow the same laws." This ensures equal access to justice regardless of wealth or social status. Strong institutions must be accountable and transparent to fight corruption effectively. When people trust their governments and feel safe in their neighborhoods, society becomes more stable and prosperous. Justice is not just about punishing wrongdoing - it is about creating systems where everyone\'s rights are protected.',
+      emoji: '🤝',
+      color: '#FF9800'
+    },
+    'frutto3-3': {
+      title: 'Global Cooperation and Active Citizenship',
+      content: 'To achieve Goal 16, "international cooperation is necessary" - countries must work together to combat crime, share knowledge, and build better institutions. But it is not just about governments. As young citizens, we also have a role to play. We can promote peace by respecting diversity, standing against discrimination, and participating in our communities. Freedom of information and expression are essential rights that allow citizens to hold institutions accountable. When we stay informed and engaged, we contribute to making "the world safer and fairer for everyone."',
+      emoji: '🌍',
+      color: '#FF9800'
+    },
+  
+    'frutto4-1': {
+      title: 'Ecologia e Sostenibilità Ambientale',
+      content: 'Il nostro pianeta affronta sfide senza precedenti: cambiamento climatico, perdita di biodiversità, inquinamento. Come giovani cittadini, abbiamo visitato il centro di raccolta differenziata della nostra città e partecipato a progetti di riforestazione urbana. Abbiamo imparato che ogni nostra scelta quotidiana - dal consumo di plastica all\'uso dell\'energia - ha un impatto diretto sul futuro. La sostenibilità non è solo un concetto astratto, ma una responsabilità concreta che inizia dalle nostre azioni. Proteggere l\'ambiente significa proteggere il nostro futuro e quello delle generazioni che verranno.',
+      emoji: '🌍',
+      color: '#9C27B0',
+      type: 'text'
+    },
+    'frutto4-2': {
+      title: 'Dialogo con le Fragilità Sociali',
+      content: 'Durante il nostro percorso di cittadinanza attiva, abbiamo incontrato realtà che spesso rimangono invisibili: il progetto "Il Banco Vince Sempre" contro il gioco d\'azzardo patologico, le testimonianze di chi vive la marginalità, le storie di chi cerca rifugio dalla guerra. L\'inviato Enzo Nucci ci ha aperto gli occhi sulla devastazione dei conflitti e sull\'importanza della pace. Queste esperienze ci hanno insegnato che la vera cittadinanza non si ferma alla teoria: significa guardare negli occhi la sofferenza, ascoltare senza giudicare, e impegnarsi concretamente per costruire una società più giusta e inclusiva.',
+      emoji: '♠️',
+      color: '#9C27B0',
+      type: 'text'
+    },
+    'frutto4-3': {
+      title: 'Il Nostro Impegno per il Futuro',
+      content: 'Questo progetto ci ha trasformati. Non siamo più solo studenti che ascoltano lezioni, ma cittadini consapevoli che guardano il mondo con occhi diversi. Abbiamo capito che la cittadinanza attiva non è un dovere imposto, ma una scelta di responsabilità verso noi stessi e gli altri. Ogni giorno possiamo fare la differenza: con il volontariato, con scelte di consumo responsabili, con il rispetto per l\'ambiente, con la solidarietà verso chi è in difficoltà. Il cambiamento inizia da noi, dalle nostre piccole azioni quotidiane che, sommate insieme, possono davvero trasformare il mondo. Siamo pronti a essere il cambiamento che vogliamo vedere.',
+      emoji: '✨',
+      color: '#9C27B0',
+      type: 'text'
+    }
+  };
+
+  const Fruit = ({ id, x, y, data }) => {
+    return (
+      <div
+        onClick={() => setSelectedFruit(id)}
+        className="fruit-icon absolute flex items-center justify-center cursor-pointer transition-all duration-300 hover:shadow-2xl hover:scale-110"
+        style={{
+          left: x,
+          top: y,
+          transform: 'translate(-50%, -50%)',
+          width: '75px',
+          height: '75px',
+          backgroundColor: data.color,
+          boxShadow: '0 10px 30px rgba(0,0,0,0.3), inset 0 -3px 8px rgba(0,0,0,0.2), inset 0 3px 8px rgba(255,255,255,0.4)',
+          border: '4px solid rgba(255,255,255,0.6)',
+          borderRadius: '50%',
+          position: 'absolute',
+          zIndex: 10,
+          backdropFilter: 'blur(2px)'
+        }}
+      >
+        <span className="text-4xl select-none drop-shadow-lg filter brightness-110">{data.emoji}</span>
+      </div>
+    );
+  };
+
+  const renderInteractiveContent = () => {
+    const fruit = fruitsData[selectedFruit];
+    
+    if (fruit.type === 'exponential') {
+      const data = generateExponentialData(interactiveValue);
+      return (
+        <div className="space-y-4">
+          <p className="text-lg text-gray-700 mb-4">{fruit.content}</p>
+          
+          <div className="bg-blue-50 p-4 rounded-lg">
+            <div className="flex items-center justify-between mb-4">
+              <label className="font-semibold text-gray-700">Base (a): {interactiveValue.toFixed(1)}</label>
+              <input
+                type="range"
+                min="1.1"
+                max="3"
+                step="0.1"
+                value={interactiveValue}
+                onChange={(e) => setInteractiveValue(parseFloat(e.target.value))}
+                className="w-64"
+              />
+            </div>
+            
+            <div className="bg-white p-3 rounded mb-3">
+              <p className="text-center font-mono text-lg">
+                y = {interactiveValue.toFixed(1)}<sup>x</sup>
+              </p>
+              <p className="text-center text-sm text-gray-600 mt-2">
+                Per x = 5: y = {Math.pow(interactiveValue, 5).toFixed(2)}
+              </p>
+            </div>
+
+            <ResponsiveContainer width="100%" height={250}>
+              <LineChart data={data}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="x" label={{ value: 'x', position: 'insideBottom', offset: -5 }} />
+                <YAxis label={{ value: 'y', angle: -90, position: 'insideLeft' }} />
+                <Tooltip />
+                <Line type="monotone" dataKey="y" stroke="#2196F3" strokeWidth={3} dot={{ r: 4 }} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+          
+          <div className="bg-green-50 p-4 rounded-lg mt-4">
+            <p className="text-sm text-gray-700">
+              <strong>💡 Applicazione alla cittadinanza:</strong> La diffusione di informazioni sui social media segue questa curva. 
+              Quando condividiamo notizie verificate sull'Agenda 2030, la consapevolezza cresce esponenzialmente!
+            </p>
+          </div>
+        </div>
+      );
+    }
+    
+    if (fruit.type === 'bacteria') {
+      const data = generateBacteriaData(bacteriaTime);
+      const currentBacteria = data[Math.round(bacteriaTime)]?.batteri || 0;
+      
+      return (
+        <div className="space-y-4">
+          <p className="text-lg text-gray-700 mb-4">{fruit.content}</p>
+          
+          <div className="bg-purple-50 p-4 rounded-lg">
+            <div className="flex items-center justify-between mb-4">
+              <label className="font-semibold text-gray-700">Tempo (ore): {bacteriaTime.toFixed(0)}</label>
+              <input
+                type="range"
+                min="0"
+                max="20"
+                step="1"
+                value={bacteriaTime}
+                onChange={(e) => setBacteriaTime(parseFloat(e.target.value))}
+                className="w-64"
+              />
+            </div>
+            
+            <div className="bg-white p-3 rounded mb-3">
+              <p className="text-center font-mono text-lg">
+                N(t) = K / (1 + e<sup>-r(t-10)</sup>)
+              </p>
+              <p className="text-center text-2xl font-bold text-purple-600 mt-2">
+                {currentBacteria} batteri
+              </p>
+              <p className="text-center text-sm text-gray-600">
+                {bacteriaTime < 8 ? '📈 Fase esponenziale' : 
+                 bacteriaTime < 15 ? '🔄 Fase di rallentamento' : 
+                 '📊 Fase stazionaria'}
+              </p>
+            </div>
+
+            <ResponsiveContainer width="100%" height={250}>
+              <LineChart data={data}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="ore" label={{ value: 'Ore', position: 'insideBottom', offset: -5 }} />
+                <YAxis label={{ value: 'Batteri', angle: -90, position: 'insideLeft' }} />
+                <Tooltip />
+                <Line type="monotone" dataKey="batteri" stroke="#9C27B0" strokeWidth={3} 
+                      dot={(props) => {
+                        const { cx, cy, payload } = props;
+                        return payload.highlight ? 
+                          <circle cx={cx} cy={cy} r={6} fill="#FF9800" /> : 
+                          <circle cx={cx} cy={cy} r={3} fill="#9C27B0" />;
+                      }} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+          
+          <div className="bg-green-50 p-4 rounded-lg mt-4">
+            <p className="text-sm text-gray-700">
+              <strong>💡 Analogia sociale:</strong> La diffusione di pratiche sostenibili segue la stessa curva! 
+              Iniziano lentamente, poi accelerano quando diventano popolari, infine si stabilizzano nella società.
+            </p>
+          </div>
+        </div>
+      );
+    }
+    
+    if (fruit.type === 'decay') {
+      const data = generateDecayData(decayYears);
+      const currentAmount = (100 * Math.pow(0.5, decayYears / 5730)).toFixed(2);
+      
+      return (
+        <div className="space-y-4">
+          <p className="text-lg text-gray-700 mb-4">{fruit.content}</p>
+          
+          <div className="bg-red-50 p-4 rounded-lg">
+            <div className="flex items-center justify-between mb-4">
+              <label className="font-semibold text-gray-700">Anni trascorsi: {decayYears}</label>
+              <input
+                type="range"
+                min="0"
+                max="30000"
+                step="1000"
+                value={decayYears}
+                onChange={(e) => setDecayYears(parseFloat(e.target.value))}
+                className="w-64"
+              />
+            </div>
+            
+            <div className="bg-white p-3 rounded mb-3">
+              <p className="text-center font-mono text-lg">
+                N(t) = N₀ · (½)<sup>t/5730</sup>
+              </p>
+              <p className="text-center text-2xl font-bold text-red-600 mt-2">
+                {currentAmount}% rimasto
+              </p>
+              <p className="text-center text-sm text-gray-600">
+                Emivita del C-14: 5.730 anni
+              </p>
+            </div>
+
+            <ResponsiveContainer width="100%" height={250}>
+              <LineChart data={data}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="anni" label={{ value: 'Anni', position: 'insideBottom', offset: -5 }} />
+                <YAxis label={{ value: '%', angle: -90, position: 'insideLeft' }} />
+                <Tooltip />
+                <Line type="monotone" dataKey="percentuale" stroke="#f44336" strokeWidth={3} 
+                      dot={(props) => {
+                        const { cx, cy, payload } = props;
+                        return payload.highlight ? 
+                          <circle cx={cx} cy={cy} r={6} fill="#FF9800" /> : 
+                          <circle cx={cx} cy={cy} r={3} fill="#f44336" />;
+                      }} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+          
+          <div className="bg-green-50 p-4 rounded-lg mt-4">
+            <p className="text-sm text-gray-700">
+              <strong>💡 Decadimento positivo:</strong> L'analfabetismo globale è passato dall'88% (1800) al 14% (oggi)! 
+              Anche la povertà estrema segue una curva di decadimento - dimostra che il progresso verso l'Agenda 2030 è misurabile.
+            </p>
+          </div>
+        </div>
+      );
+    }
+    
+    return <p className="text-lg text-gray-700 leading-relaxed">{fruit.content}</p>;
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-sky-100 to-white p-4 md:p-8">
+      <style>{`
+        .tree-container {
+          position: relative;
+          max-width: 900px;
+          margin: 0 auto;
+        }
+        .tree-image {
+          width: 100%;
+          height: auto;
+          display: block;
+          filter: drop-shadow(0 10px 30px rgba(0,0,0,0.2));
+        }
+        .fruit-icon {
+          transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+          filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+          animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+          0%, 100% {
+            transform: translate(-50%, -50%) translateY(0px);
+          }
+          50% {
+            transform: translate(-50%, -50%) translateY(-8px);
+          }
+        }
+        .fruit-icon:hover {
+          transform: translate(-50%, -50%) scale(1.3) rotate(8deg) translateY(-8px) !important;
+          filter: drop-shadow(0 12px 24px rgba(0,0,0,0.4));
+        }
+        input[type="range"] {
+          -webkit-appearance: none;
+          width: 100%;
+          height: 8px;
+          border-radius: 5px;
+          background: #d3d3d3;
+          outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          background: #2196F3;
+          cursor: pointer;
+        }
+        input[type="range"]::-moz-range-thumb {
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          background: #2196F3;
+          cursor: pointer;
+        }
+      `}</style>
+
+      <div className="max-w-6xl mx-auto">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
+            🌳 L'Albero della Cittadinanza Attiva
+          </h1>
+          <p className="text-lg md:text-xl italic text-gray-600">
+            "L'educazione è l'arma più potente che puoi usare per cambiare il mondo."
+            <br />
+            <span className="text-base">- Nelson Mandela</span>
+          </p>
+          <p className="mt-4 text-gray-700 font-semibold">Classe 4CIT - Trimestre 2025/2026</p>
+        </div>
+
+        <div className="bg-gradient-to-b from-sky-50 to-green-50 rounded-2xl shadow-2xl p-4 md:p-8">
+          <div className="tree-container relative">
+            <img
+              src="/albero-cartoon.jpg"
+              alt="Albero della Cittadinanza"
+              className="tree-image"
+            />
+
+            <Fruit id="frutto1-1" x="22%" y="24%" data={fruitsData['frutto1-1']} />
+            <Fruit id="frutto1-2" x="16%" y="33%" data={fruitsData['frutto1-2']} />
+            <Fruit id="frutto1-3" x="28%" y="37%" data={fruitsData['frutto1-3']} />
+
+            <Fruit id="frutto2-1" x="78%" y="24%" data={fruitsData['frutto2-1']} />
+            <Fruit id="frutto2-2" x="84%" y="33%" data={fruitsData['frutto2-2']} />
+            <Fruit id="frutto2-3" x="72%" y="37%" data={fruitsData['frutto2-3']} />
+
+            <Fruit id="frutto3-1" x="50%" y="12%" data={fruitsData['frutto3-1']} />
+            <Fruit id="frutto3-2" x="40%" y="20%" data={fruitsData['frutto3-2']} />
+            <Fruit id="frutto3-3" x="60%" y="20%" data={fruitsData['frutto3-3']} />
+
+            <Fruit id="frutto4-1" x="35%" y="48%" data={fruitsData['frutto4-1']} />
+            <Fruit id="frutto4-2" x="50%" y="54%" data={fruitsData['frutto4-2']} />
+            <Fruit id="frutto4-3" x="65%" y="48%" data={fruitsData['frutto4-3']} />
+          </div>
+
+          <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+            <div className="p-3 bg-green-50 rounded-lg border-2 border-green-500">
+              <div className="font-bold text-green-700">Area Umanistica</div>
+              <div className="text-sm text-gray-600">Agenda 2030</div>
+            </div>
+            <div className="p-3 bg-blue-50 rounded-lg border-2 border-blue-500">
+              <div className="font-bold text-blue-700">Matematica</div>
+              <div className="text-sm text-gray-600">Funzioni e Modelli</div>
+            </div>
+            <div className="p-3 bg-orange-50 rounded-lg border-2 border-orange-500">
+              <div className="font-bold text-orange-700">Inglese</div>
+              <div className="text-sm text-gray-600">Goal 16 - Peace & Justice</div>
+            </div>
+            <div className="p-3 bg-purple-50 rounded-lg border-2 border-purple-500">
+              <div className="font-bold text-purple-700">Esperienze</div>
+              <div className="text-sm text-gray-600">Progetti e Testimonianze</div>
+            </div>
+          </div>
+        </div>
+
+        {selectedFruit && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+              <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex justify-between items-start">
+                <div>
+                  <h2 className="text-2xl md:text-3xl font-bold text-gray-800 flex items-center gap-3">
+                    <span className="text-4xl">{fruitsData[selectedFruit].emoji}</span>
+                    {fruitsData[selectedFruit].title}
+                  </h2>
+                </div>
+                <button
+                  onClick={() => setSelectedFruit(null)}
+                  className="text-gray-500 hover:text-gray-700 transition-colors"
+                >
+                  <X size={28} />
+                </button>
+              </div>
+              
+              <div className="p-6">
+                {renderInteractiveContent()}
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="mt-8 text-center text-gray-600">
+          <p className="text-sm">
+            👆 Clicca sui frutti dell'albero per esplorare i contenuti del progetto
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default AlberoCittadinanza;
