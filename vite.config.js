@@ -5,3 +5,4 @@ export default defineConfig({
   plugins: [react()],
   base: process.env.VITE_BASE_PATH || "/Elaborato-Ed-Civica-M-M",
 })
+ 
