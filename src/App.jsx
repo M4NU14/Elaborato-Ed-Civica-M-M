@@ -572,7 +572,7 @@ const AlberoCittadinanza = () => {
                   </div>
                   <div>
                     <div className="font-bold">Rispetto per compagni e insegnanti</div>
-                    <div className="text-sm text-gray-600">Ascoltare senza interrompere, usare un linguaggio rispettoso</div>
+                    <div className="text-sm text-gray-600">Ascoltare senza interrompere, usare un linguaggio rispettoso, non simulare azioni di violenza </div>
                   </div>
                 </div>
               </div>
