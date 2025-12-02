@@ -808,7 +808,8 @@ const AlberoCittadinanza = () => {
             </div>
             <div className="p-2 md:p-3 bg-cyan-50 rounded-lg border-2 border-cyan-500 col-span-2 md:col-span-1">
               <div className="font-bold text-cyan-700">Area Informatica</div>
-              <div className="text-xs text-gray-600">GDPR, Cittadini e pubblica amministrazione, rispetto delle regole</div>
+              <div className="text-xs text-gray-600" id= 'visibleinter'>GDPR</div>
+              <div className="text-xs text-gray-600" id= 'visible1'>GDPR, Cittadini e pubblica amministrazione, rispetto delle regole</div>
             </div>
           </div>
         </div>
