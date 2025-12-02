@@ -751,12 +751,12 @@ const AlberoCittadinanza = () => {
 
             {/* RAMO 1: Area Umanistica - SINISTRA ALTO */}
             <Fruit id="frutto1-1" x="25%" y="30%" data={fruitsData['frutto1-1']} />
-            <Fruit id="frutto1-2" x="18%" y="40%" data={fruitsData['frutto1-2']} />
+            <Fruit id="frutto1-2" x="18%" y="42%" data={fruitsData['frutto1-2']} />
             <Fruit id="frutto1-3" x="22%" y="55%" data={fruitsData['frutto1-3']} />
 
             {/* RAMO 2: Matematica - DESTRA ALTO */}
             <Fruit id="frutto2-1" x="75%" y="30%" data={fruitsData['frutto2-1']} />
-            <Fruit id="frutto2-2" x="82%" y="40%" data={fruitsData['frutto2-2']} />
+            <Fruit id="frutto2-2" x="82%" y="42%" data={fruitsData['frutto2-2']} />
             <Fruit id="frutto2-3" x="78%" y="55%" data={fruitsData['frutto2-3']} />
 
             {/* RAMO 3: Inglese - CENTRO ALTO */}
