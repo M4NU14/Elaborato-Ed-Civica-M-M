@@ -659,6 +659,12 @@ const AlberoCittadinanza = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-sky-100 to-white p-2 md:p-8">
       <style>{`
+        #visible1 {
+          display: none;
+        }
+        #visibleinter {
+          display: block;
+        }
         .tree-container {
           position: relative;
           max-width: 900px;
@@ -700,6 +706,12 @@ const AlberoCittadinanza = () => {
           .fruit-icon:hover {
             transform: translate(-50%, -50%) scale(1.2) !important;
           }
+            #visibleinter {
+              display: none;
+            }
+            #visible1 {
+              display: block;
+            }
         }
         
         input[type="range"] {
@@ -738,8 +750,9 @@ const AlberoCittadinanza = () => {
             <br />
             <span className="text-sm md:text-base">- Nelson Mandela</span>
           </p>
-          <p className="mt-4 text-gray-700 font-semibold text-sm md:text-base">Classe 4CIT - Trimestre 2025/2026 </p>
-          <p className="mt-4 text-gray-700 font-semibold text-sm md:text-base">by Ruscitto M. & Pernarella M.</p>
+          <p className="mt-4 text-gray-700 font-semibold text-sm md:text-base" id='visibleinter'>Classe 4CIT - Trimestre 2025/2026 by Ruscitto M. & Pernarella M.</p>
+          <p className="mt-4 text-gray-700 font-semibold text-sm md:text-base" id='visible1'>Classe 4CIT - Trimestre 2025/2026 </p>
+          <p className="mt-4 text-gray-700 font-semibold text-sm md:text-base" id= 'visible1'>by Ruscitto M. & Pernarella M. </p>
         </div>
 
         <div className="bg-gradient-to-b from-sky-50 to-green-50 rounded-2xl shadow-2xl p-2 md:p-8">
