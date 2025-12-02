@@ -691,7 +691,7 @@ const AlberoCittadinanza = () => {
         @media (max-width: 768px) {
           .fruit-icon {
             width: 20x !important;
-            height: 30px !important;
+            height: 20px !important;
             border-width: 2px !important;
           }
           .fruit-icon span {
