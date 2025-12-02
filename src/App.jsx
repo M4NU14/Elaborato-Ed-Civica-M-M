@@ -795,15 +795,15 @@ const AlberoCittadinanza = () => {
               <div className="text-xs text-gray-600">Agenda 2030</div>
             </div>
             <div className="p-2 md:p-3 bg-blue-50 rounded-lg border-2 border-blue-500">
-              <div className="font-bold text-blue-700">Matematica</div>
+              <div className="font-bold text-blue-700">Area Scientifica</div>
               <div className="text-xs text-gray-600">Funzioni</div>
             </div>
             <div className="p-2 md:p-3 bg-orange-50 rounded-lg border-2 border-orange-500">
-              <div className="font-bold text-orange-700">Inglese</div>
+              <div className="font-bold text-orange-700">Area dei Linguaggi</div>
               <div className="text-xs text-gray-600">Goal 16</div>
             </div>
             <div className="p-2 md:p-3 bg-purple-50 rounded-lg border-2 border-purple-500">
-              <div className="font-bold text-purple-700">Esperienze</div>
+              <div className="font-bold text-purple-700">Esperienze di realtà</div>
               <div className="text-xs text-gray-600">Progetti</div>
             </div>
             <div className="p-2 md:p-3 bg-cyan-50 rounded-lg border-2 border-cyan-500 col-span-2 md:col-span-1">
