@@ -760,9 +760,9 @@ const AlberoCittadinanza = () => {
             <Fruit id="frutto2-3" x="78%" y="55%" data={fruitsData['frutto2-3']} />
 
             {/* RAMO 3: Inglese - CENTRO ALTO */}
-            <Fruit id="frutto3-1" x="50%" y="20%" data={fruitsData['frutto3-1']} />
-            <Fruit id="frutto3-2" x="42%" y="28%" data={fruitsData['frutto3-2']} />
-            <Fruit id="frutto3-3" x="58%" y="28%" data={fruitsData['frutto3-3']} />
+            <Fruit id="frutto3-1" x="50%" y="19%" data={fruitsData['frutto3-1']} />
+            <Fruit id="frutto3-2" x="42%" y="27%" data={fruitsData['frutto3-2']} />
+            <Fruit id="frutto3-3" x="58%" y="27%" data={fruitsData['frutto3-3']} />
 
             {/* RAMO 4: Esperienze - CENTRO BASSO */}
             <Fruit id="frutto4-1" x="38%" y="55%" data={fruitsData['frutto4-1']} />
